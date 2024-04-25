@@ -1,7 +1,7 @@
 ---
 title: "HW 8 - Bike Rentals"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Annie Hou"
+date: "04/23/2024"
 output: html_document
 ---
 
@@ -19,27 +19,98 @@ dcbikeshare <- read_csv("data/bikeshare-day.csv", show_col_types = FALSE)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r ex1}
+dcbikeshare <- dcbikeshare %>%
+  mutate(season = factor(season, levels = c(1, 2, 3, 4), labels = c("winter", "spring", "summer", "fall"))) %>%
+  mutate(season = relevel(season, ref = "spring"))
+```
+
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r ex2}
+dcbikeshare <- dcbikeshare %>%
+  mutate(weekday = case_when(
+    weekday %in% 1:5 ~ "yes",
+    weekday == 0 | weekday == 6 ~ "no"
+  )) %>%
+  mutate(holiday = factor(holiday, levels = c(0, 1), labels = c("no", "yes"))) %>%
+  mutate(weekday = factor(weekday, levels = c("no", "yes")))
+
+```
+
 
 ### Exercise 3
 
-Remove this text, and add your answer for Exercise 3 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r ex3}
+dcbikeshare <- dcbikeshare %>%
+  mutate(yr = factor(yr, levels = c(0, 1), labels = c("2011", "2012")))
+```
+
 
 ### Exercise 4
 
-...
+```{r ex4}
+dcbikeshare <- dcbikeshare %>%
+  mutate(weathersit = factor(weathersit, levels = c(1, 2, 3), labels = c("clear", "mist", "rain")))
+
+```
+
+### Exercise 5
+
+```{r ex5}
+dcbikeshare <- dcbikeshare %>%
+  mutate(raw_temp = temp * 41,
+         raw_feel = atemp * 50, 
+         raw_hum = hum * 100, 
+         raw_windspeed = windspeed * 67)
+```
+
+### Exercise 6
+
+```{r ex6}
+dcbikeshare <- dcbikeshare %>%
+  mutate(check_sum = (casual + registered == cnt))
+
+all_true <- all(dcbikeshare$check_sum)
+print(all_true)
+```
 
 
+### Exercise 7
+
+```{r ex7}
+ggplot(dcbikeshare, aes(x = dteday, y = cnt, color = raw_feel)) +
+  geom_point(alpha = 0.7) +
+  labs(x = "Date",
+       y = "Total Bike Rentals",
+       title = "Bike rentals in DC, 2011 and 2012",
+       subtitle = "Warmer temperatures associated with more bike rentals",
+       color = "Temperature (C)") +
+  theme_minimal()
+```
+
+### Exercise 8
+
+```{r ex8}
+ggplot(dcbikeshare, aes(x = season, y = cnt)) +
+  geom_boxplot() +
+  labs(title = "Bike Rentals by Season in DC, 2011 and 2012",
+       x = "Season",
+       y = "Total Bike Rentals") +
+  theme_minimal()
+```
+I used a box plot here to show the relationship between bike rentals and season. The plot shows that number of bike rentals vary a lot with the seasons. Spring, summer, and fall have similar median values and interquartile ranges (where the range for summer is higher), which means that there are more demands especially during summer, and moderate number of rentals during spring and fall, given the weather is more likely to be warm and good. However, winter has a much lower median and interquartile range, which means that people don't rent bike a lot in the winter, likely due to cold weather. The outlier in fall shows that there were days with unusually low rentals, which could be due to various factors like weather conditions or special events.
+
+### Exercise 9
+
+```{r ex9}
+
+```
+
+
+### Exercise 10
+
+```{r ex10}
+
+```
