@@ -442,9 +442,131 @@ like weather conditions or special events.</p>
 </div>
 <div id="exercise-9" class="section level3">
 <h3>Exercise 9</h3>
+<pre class="r"><code>model_temp &lt;- lm(cnt ~ temp, data = dcbikeshare)
+model_temp</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = cnt ~ temp, data = dcbikeshare)
+## 
+## Coefficients:
+## (Intercept)         temp  
+##        1215         6641</code></pre>
+<pre class="r"><code>summary(model_temp)$r.squared</code></pre>
+<pre><code>## [1] 0.3937487</code></pre>
+<p>The linear model is: total daily bike rentals = 1215 + 6641*daily
+temperature</p>
+<p>In this model, the intercept 1215 means that the when the temperature
+is 0 degree Celsius, the number of bike rentals is around 1215. The
+slope 6641 means that for each degree Celsius increase in temperature,
+the total number of bike rentals increases by approximately 6641.</p>
+<p>The R^2 value is around 0.3937, which means that around 39.37% of the
+variability in the total number of bike rentals can be explained by the
+daily temperature. It is relatively far from 1, meaning that the linear
+model doesn’t fit that well.</p>
 </div>
 <div id="exercise-10" class="section level3">
 <h3>Exercise 10</h3>
+<pre class="r"><code>model_atemp &lt;- lm(cnt ~ atemp, data = dcbikeshare)
+model_atemp</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = cnt ~ atemp, data = dcbikeshare)
+## 
+## Coefficients:
+## (Intercept)        atemp  
+##       945.8       7501.8</code></pre>
+<pre class="r"><code>summary(model_atemp)$r.squared</code></pre>
+<pre><code>## [1] 0.3982439</code></pre>
+<p>The linear model is: total daily bike rentals = 945.8 + 7501.8*daily
+feeling temperature</p>
+<p>The intercept is 945.8, meaning that the when the feeling temperature
+is 0 degree Celsius, the number of bike rentals is around 945.8. The
+slope is 7501.8, meaning that for each degree Celsius increase in the
+feeling temperature, the total number of bike rentals increases by
+approximately 7501.8.</p>
+<p>The R^2 value is around 0.3982, which means that around 39.82% of the
+variability in the total number of bike rentals can be explained by the
+daily feeling temperature. Compare to the R^2 value for the daily
+temperature in the last problem, the R^2 increased slightly. It means
+that as a predictor of bike rentals, the feeling temperature is slightly
+better than temperature.</p>
+</div>
+<div id="exercise-11" class="section level3">
+<h3>Exercise 11</h3>
+<pre class="r"><code>model &lt;- lm(cnt ~ season + yr + holiday + workingday + weathersit + atemp + hum + windspeed + atemp*holiday, data = dcbikeshare)
+model</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = cnt ~ season + yr + holiday + workingday + weathersit + 
+##     atemp + hum + windspeed + atemp * holiday, data = dcbikeshare)
+## 
+## Coefficients:
+##      (Intercept)      seasonwinter      seasonsummer        seasonfall  
+##           2629.7           -1170.7            -195.8             375.0  
+##           yr2012        holidayyes        workingday    weathersitmist  
+##           2020.5           -1375.6             125.5            -419.2  
+##   weathersitrain             atemp               hum         windspeed  
+##          -1887.7            5435.3           -1376.0           -2494.4  
+## holidayyes:atemp  
+##           1758.1</code></pre>
+<pre class="r"><code>summary(model)$adj.r.squared</code></pre>
+<pre><code>## [1] 0.8181315</code></pre>
+<p>The adjusted R squared here is around 0.818.</p>
+</div>
+<div id="exercise-12" class="section level3">
+<h3>Exercise 12</h3>
+<p>For non-holiday days, the fitted equation is: total daily bike
+rentals = (2629.7 + 0) -1170.7 * winter -195.8 * summer + 375.0 * fall +
+2020.5 * yr + 125.5 * workingday - 419.2 * weather mist - 1887.7 *
+weather rain + 5435.3* feeling temperature - 1376.0 * humidity - 2494.4
+* windspeed</p>
+<p>For holiday days, the fitted equation is: total daily bike rentals =
+(2629.7 - 1375.6) -1170.7 * winter -195.8 * summer + 375.0 * fall +
+2020.5 * yr + 125.5 * workingday - 419.2 * weather mist - 1887.7 *
+weather rain + (5435.3 + 1758.1) * feeling temperature - 1376.0 *
+humidity - 2494.4 * windspeed</p>
+<p>The slope for feeling temperature on non-holiday days (holiday=0) is
+5435.3, meaning that on non-holiday days, for every degree Celsius
+increase in feeling temperature, there is an increase of 5435.3 in the
+number of total bike rentals.</p>
+<p>The slope for feeling temperature on holiday days (holiday=1) is
+5435.3 + 1758.1= 7193.4 because it accounts for the interaction effect.
+Then, on holiday days, for every degree Celsius increase in feeling
+temperature, there is an increase of 7193.4 in the number of total bike
+rentals.</p>
+</div>
+<div id="exercise-13" class="section level3">
+<h3>Exercise 13</h3>
+<p>The slope of season varies for different seasons, with the baseline
+being spring. The slope of summer is -195.8, meaning that on average
+summer has 195.8 units less total rentals compared to the rentals in
+spring. The slope of fall is 375.0, meaning that on average, fall has
+375 units more than the rentals in spring. The slope of winter is
+-1170.7, meaning that on average, winter has 1170.7 units total rentals
+less than the rentals in spring.</p>
+<p>The slope for the feeling temperature are different from holidays and
+non-holidays. The slope for holidays is 5435.3 + 1758.1= 7193.4, and the
+slope for non-holiday days is 5435.3.</p>
+</div>
+<div id="exercise-14" class="section level3">
+<h3>Exercise 14</h3>
+<p>The intercept for holidays (holiday = 1) is 2629.7 - 1375.6 = 1254.1,
+which means that if the feeling temperature and other variables were all
+zero, the total number of bike rentals on holiday would be 1254.1.</p>
+<p>The intercept for non-holidays (holiday = 0) is 2629.7, which means
+that if the feeling temperature and other variables were all zero, the
+total number of bike rentals on non-holiday would be 2629.7.</p>
+</div>
+<div id="exercise-15" class="section level3">
+<h3>Exercise 15</h3>
+<p>The season with the highest predicted total daily bike rentals is
+fall, because it has the most positive coefficient (375.0), which means
+that on average it has the most increase in rentals compared to the
+baseline season spring, with everything else being the same.</p>
+<p>The season with the lowest predicted total bike rentals is winter,
+because it has the most negative coefficient (-1170.7), which means that
+on average it has the least increase in rentals compared to the baseline
+season spring, with everything else being the same.</p>
 </div>
 </div>
 
